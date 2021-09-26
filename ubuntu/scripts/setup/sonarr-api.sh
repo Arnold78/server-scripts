@@ -1,0 +1,1 @@
+cat ~/.config/sonarr/config.xml | grep -e \<Api -e \<Port -e \<UrlBase

@@ -1,0 +1,1 @@
+cat ~/.config/Radarr/config.xml | grep -e \<Api -e \<Port -e \<UrlBase
