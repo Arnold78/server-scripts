@@ -13,6 +13,7 @@ installApps()
     read -rp "Docker-Compose (y/n): " DCOMP
     read -rp "NGinX Proxy Manager (y/n): " NPM
     read -rp "Portainer-CE - Docker Management GUI (y/n): " PTAIN
+    read -rp "Portainer-agent (y/n): " PTAGNT
 
     echo "Updating Packages..."
     echo ""
@@ -24,14 +25,14 @@ installApps()
     #######################################################
 
     if [[ "$REPLY" != "1" ]]; then
-        sudo apt update
+        sudo apt update && sudo apt upgrade -y
         echo ""
         echo ""
         echo "Install Prerequisite Packages..."
         echo ""
         echo ""
         sleep 2s
-
+        
         sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
 
         if [[ "$DOCK" == [yY] ]]; then
@@ -197,7 +198,7 @@ installApps()
         echo ""
         echo ""
 
-        mkdir -p /mnt/Volume2/docker/containers/nginx-proxy-manager
+        sudo mkdir -p /mnt/Volume2/docker/containers/nginx-proxy-manager
         cd /mnt/Volume2/docker/containers/nginx-proxy-manager
 
         curl https://raw.githubusercontent.com/bmcgonag/docker_installs/master/docker_compose.nginx_proxy_manager.yml -o docker-compose.yml

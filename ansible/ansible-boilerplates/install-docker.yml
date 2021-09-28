@@ -6,10 +6,6 @@
 
   # Install Docker
   # --
-  #
-  # TODO: Make sure you replace user arnold with your desired administrative
-  #       username for your remote server!
-  #
   - name: install prerequisites
     apt:
       name:
@@ -41,10 +37,6 @@
 
   # Installs Docker SDK
   # --
-  #
-  # TODO: Make sure you replace user arnold with your desired administrative
-  #       username for your remote server!
-  #
   - name: install python package manager
     apt:
       name: python3-pip
@@ -55,3 +47,6 @@
       name:
         - docker
         - docker-compose
+
+  # - name: install docker-compose-completion
+    
