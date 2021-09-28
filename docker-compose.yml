@@ -1,0 +1,362 @@
+---
+version: "3"
+services:
+  amd:
+    image: randomninjaatk/amd 
+    container_name: amd
+    volumes:
+      - ${CONTAINERS}/amd/config:/config
+      # - ${DOWNLOADS}/torrents:/downloads-amd
+      - ${DATA}:/downloads-amd
+    environment:
+      - PUID=1000
+      - PGID=100
+      - AUTOSTART=true
+      - SCRIPTINTERVAL=1h
+      - DOWNLOADMODE=wanted
+      - FALLBACKSEARCH=True
+      - LIST=both
+      - SearchType=both
+      - Concurrency=1
+      - EMBEDDED_COVER_QUALITY=80
+      - FORMAT=FLAC
+      - BITRATE=320
+      - ENABLEPOSTPROCESSING=true
+      - FORCECONVERT=false
+      - requirequality=false
+      - MatchDistance=10
+      - replaygain=true
+      - FolderPermissions=766
+      - FilePermissions=666
+      - MBRAINZMIRROR=https://musicbrainz.org
+      - MBRATELIMIT=1
+      - LidarrUrl=http://192.168.1.114:8686
+      - LidarrAPIkey=ztzrx9bhcin2gctbus5ikwjmbchaqu77
+      - ARL_TOKEN=ARLTOKEN
+      # - NOTIFYPLEX=false
+      # - PLEXLIBRARYNAME=Music
+      # - PLEXURL=http://x.x.x.x:8686
+      # - PLEXTOKEN=plextoken
+      - ALBUM_TYPE_FILTER=COMPILE
+      - POSTPROCESSTHREADS=1
+    restart: unless-stopped
+
+  lidarr:
+    container_name: lidarr
+    image: hotio/lidarr
+    networks: 
+      default:
+        ipv4_address: 172.21.1.12
+    ports:
+      - "8686:8686"
+    environment:
+      - PUID=1000
+      - PGID=100
+      - UMASK=002
+      - TZ=America/Chicago
+    volumes:
+      - ${CONTAINERS}/lidarr/config:/config
+      # - ${DOWNLOADS}/torrents:/data
+      - ${DATA}:/data
+    restart: unless-stopped
+
+  lazylibrarian:
+    image: ghcr.io/linuxserver/lazylibrarian
+    container_name: lazylibrarian
+    networks: 
+      default:
+        ipv4_address: 172.21.1.13
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=America/Chicago
+      - DOCKER_MODS=linuxserver/calibre-web:calibre|linuxserver/mods:lazylibrarian-ffmpeg #optional
+    volumes:
+      - ${CONTAINERS}/lazylibrarian/config:/config
+      - ${DATA}/torrents:/data/torrents
+   #   - /path/to/data/:/books #optional
+    ports:
+      - 5299:5299
+    restart: unless-stopped
+
+  calibre-web:
+    image: linuxserver/calibre-web
+    container_name: calibre-web
+    networks:
+      default:
+        ipv4_address: 172.21.2.6
+    ports:
+      - 8083:8083
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=America/Chicago
+      - DOCKER_MODS=linuxserver/calibre-web:calibre
+    volumes:
+      - ${CONTAINERS}/calibre-web/config:/config
+      - ${CONTAINERS}/calibre-web/books:/books
+    restart: unless-stopped
+
+  prowlarr:
+    container_name: prowlarr
+    image: ghcr.io/linuxserver/prowlarr:nightly-version-0.1.1.940
+    networks:
+      default:
+        ipv4_address: 172.21.1.14
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=America/Chicago
+    volumes:
+      - ${CONTAINERS}/prowlarr/config:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+
+  jackett:
+    container_name: jackett
+    image: hotio/jackett
+    networks: 
+      default:
+        ipv4_address: 172.21.1.5
+    ports:
+      - 9117:9117
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=America/Chicago
+      - UMASK=002
+    volumes:
+      - ${CONTAINERS}/jackett/config:/config
+      - /etc/localtime:/etc/localtime
+    restart: unless-stopped
+
+  nzbhydra2:
+    container_name: nzbhydra2
+    image: hotio/nzbhydra2
+    networks: 
+      default:
+        ipv4_address: 172.21.1.6
+    ports:
+      - 5076:5076
+    environment:
+      - PUID=1000
+      - PGID=100
+      - UMASK=002
+      - TZ=America/Chicago
+    volumes:
+      - ${CONTAINERS}/nzbhydra2/config:/config
+      - ${DATA}:/data/torrents
+    restart: unless-stopped
+
+## Headphones 
+  headphones:
+    image: ghcr.io/linuxserver/headphones
+    container_name: headphones
+    networks: 
+      default:
+        ipv4_address: 172.21.1.7
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - UMASK_SET=002
+    volumes:
+      - ${CONTAINERS}/headphones/config:/config
+      - ${DOWNLOADS}/headphones/empty:/downloads # Not Used
+      - ${DATA}:/data
+    ports:
+      - 8181:8181
+    restart: unless-stopped
+
+  sonarr:
+    image: ghcr.io/linuxserver/sonarr
+    container_name: sonarr
+    networks:
+      default:
+        ipv4_address: 172.21.1.2
+    ports:
+      - 8989:8989
+    depends_on:
+      - sabnzbd
+      - jackett
+      - nzbhydra2
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONTAINERS}/sonarr/config:/config
+      - ${DOWNLOADS}/sonarr/empty:/downloads # Not used
+      - ${DATA}:/data
+    restart: unless-stopped
+    
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    networks:
+      default:
+        ipv4_address: 172.21.1.3
+    depends_on:
+      - sabnzbd
+      - jackett
+      - nzbhydra2
+    environment:
+      - TZ=America/Chicago
+      - PUID=1000
+      - PGID=100
+    volumes:
+      - ${CONTAINERS}/radarr/config:/config
+      - ${DOWNLOADS}/radarr/empty:/downloads # Not used
+      - ${DATA}:/data
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+
+  bazarr:
+    image: linuxserver/bazarr
+    container_name: bazarr
+    networks:
+      default:
+        ipv4_address: 172.21.1.4
+    ports:
+      - 6767:6767
+    depends_on: 
+      - sonarr
+      - radarr
+    environment: 
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONTAINERS}/bazarr/config:/config
+      - ${DATA}:/data
+    restart: unless-stopped
+
+  sabnzbd:
+    image: linuxserver/sabnzbd
+    container_name: sabnzbd
+    networks:
+      default:
+        ipv4_address: 172.21.1.8
+    ports:
+      - 9050:8080
+      - 9051:9090
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONTAINERS}/sabnzbd/config:/config
+      - ${DATA}/usenet:/data/usenet
+    restart: unless-stopped
+
+  # portainer:
+  #   image: portainer/portainer-ce
+  #   container_name: portainer
+  #   networks:
+  #     default:
+  #       ipv4_address: 172.21.2.2
+  #   ports:
+  #     - 9000:9000
+  #     - 8000:8000
+  #   restart: always
+  #   command: -H unix:///var/run/docker.sock
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - ${CONTAINERS}/portainer:/data
+
+  portainer_agent:
+    image: portainer/agent
+    container_name: portainer-agent
+    networks:
+      default:
+        ipv4_address: 172.21.2.3
+    ports:
+      - 9001:9001
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+    restart: always
+
+  organizr:
+    image: organizr/organizr
+    container_name: organizr
+    networks:
+      default:
+        ipv4_address: 172.21.2.4
+    ports:
+      - 9983:80
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONTAINERS}/organizr:/config
+    restart: unless-stopped
+
+  duplicati:
+    image: linuxserver/duplicati
+    container_name: duplicati
+    networks:
+      default:
+        ipv4_address: 172.21.2.5
+    ports:
+      - 8200:8200
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONTAINERS}/duplicati/config:/config
+      - ${CONTAINERS}/duplicati/backups:/backups
+      - /:/source
+    restart: unless-stopped
+
+  # Heimdall - Unified Frontend Alternative
+  # Putting all services behind Oragnizr slows things down.
+  heimdall:
+    container_name: heimdall
+    image: linuxserver/heimdall:latest
+    restart: unless-stopped
+    networks:
+      default:
+        ipv4_address: 172.21.2.10
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 10082:80
+      - 10443:443
+    volumes:
+      - ${CONTAINERS}/heimdall/config:/config
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+
+  # adminer:
+  #   container_name: adminer
+  #   image: adminer/adminer:latest
+  #   hostname: adminer
+  #   restart: unless-stopped
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   networks:
+  #     backend:
+  #       ipv4_address: 172.30.0.2
+  #   ports:
+  #     - 18080:8080
+  #   volumes:
+  #     - ${CONTAINERS}/adminer/config:/config
+  #   environment:
+  #     PUID: ${PUID}
+  #     PGID: ${PGID}
+  #     TZ: ${TZ}
+    
+
+networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.21.0.0/16
