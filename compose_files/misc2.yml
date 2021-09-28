@@ -1,0 +1,180 @@
+---
+version: "3.5"
+services:
+
+#   netdata:
+#     cap_add:
+#       - SYS_PTRACE
+#     container_name: netdata
+#     environment:
+#       - PGID=${PGID}
+#       - TZ=${TZ}
+#     logging:
+#       driver: json-file
+#       options:
+#         max-file: ${DOCKERLOGGING_MAXFILE}
+#         max-size: ${DOCKERLOGGING_MAXSIZE}
+#     restart: unless-stopped
+#     security_opt:
+#       - apparmor:unconfined
+#     volumes:
+#       - /etc/group:/host/etc/group:ro
+#       - /etc/localtime:/etc/localtime:ro
+#       - /etc/lsb-release:/host/etc/lsb-release:ro
+#       - /etc/os-release:/host/etc/os-release:ro
+#       - /etc/passwd:/host/etc/passwd:ro
+#       - /proc:/host/proc:ro
+#       - /sys:/host/sys:ro
+#       - /var/run/docker.sock:/var/run/docker.sock:ro
+#       - ${CONTAINERS}/netdata/config:/netdata
+
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/localtime:/etc/localtime:ro
+      
+#   adguardhome:
+#     image: adguard/adguardhome
+#     container_name: adguard
+#     environment: 
+#       PUID=1000
+#       PGID=100
+#       TZ=America/Chicago
+#     volumes:
+#       - /my/own/workdir:/opt/adguardhome/work
+#       - /my/own/confdir:/opt/adguardhome/conf
+#     ports:
+#       - 53:53/tcp 
+#       - 53:53/udp 
+#       - 80:80/tcp 
+#       - 3000:3000/tcp 
+#       - 67:67/udp 
+#       - 68:68/tcp 
+#       - 68:68/udp
+#       - 443:443/tcp
+#       - 853:853/tcp
+#     restart: unless-stopped
+
+  # netbootxyz:
+  #   image: ghcr.io/linuxserver/netbootxyz
+  #   container_name: netbootxyz
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=100
+  #     - MENU_VERSION=1.9.9 #optional
+  #     - PORT_RANGE=30000:30010 #optional
+  #     - SUBFOLDER=/ #optional
+  #   volumes:
+  #     - ${CONFIG}/netbootxyz:/config
+  #     - ${NETBOOT}/netbootxyz/assets:/assets #optional
+  #   ports:
+  #     - 3000:3000
+  #     - 69:69/udp
+  #     - 8080:80 #optional
+  #   restart: unless-stopped
+    
+# CONFIG=/srv/dev-disk-by-uuid-7e3c2bfc-7f4a-47e7-9adb-a015c9cd368b/Apps
+###################
+  # httpserver:
+  #   container_name: httpserver
+  #   environment:
+  #     - FILE_SERVER_COLOR_SET=${HTTPSERVER_FILE_SERVER_COLOR_SET}
+  #     - FILE_SERVER_TITLE=${HTTPSERVER_FILE_SERVER_TITLE}
+  #     - PGID=${PGID}
+  #     - PUID=${PUID}
+  #     - TZ=${TZ}
+  #   logging:
+  #     driver: json-file
+  #     options:
+  #       max-file: ${DOCKERLOGGING_MAXFILE}
+  #       max-size: ${DOCKERLOGGING_MAXSIZE}
+  #   restart: ${HTTPSERVER_RESTART}
+  #   volumes:
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - ${DATA}:/data
+  #     - ${HTTPSERVER_HTML_DIR}:/html
+
+  qbittorrentvpn:
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    container_name: qbittorrentvpn
+    environment:
+      - ENABLE_PRIVOXY=true
+      - LAN_NETWORK=${LAN_NETWORK}
+      - NAME_SERVERS=${NS1},${NS2}
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+      - VPN_CLIENT=${OPENVPN_CLIENT}
+      - VPN_ENABLED=true
+      - VPN_OPTIONS=${OPENVPN_OPTIONS}
+      - VPN_PASS=${OPENVPN_PASS}
+      - VPN_PROV=${OPENVPN_PROV}
+      - VPN_USER=${OPENVPN_USER}
+      - WEBUI_PORT=8180
+    logging:
+      driver: json-file
+      options:
+        max-file: ${DOCKERLOGGING_MAXFILE}
+        max-size: ${DOCKERLOGGING_MAXSIZE}
+    privileged: true
+    restart: unless-stopped
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${CONTAINERS}/qbittorrentvpn/config:/config
+      - ${DATA}:/data
+      - ${OPENVPN_CONFIG}:/config/openvpn
+  sabnzbdvpn:
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    container_name: sabnzbdvpn
+    environment:
+      - ENABLE_PRIVOXY=true
+      - LAN_NETWORK=${LAN_NETWORK}
+      - NAME_SERVERS=${NS1},${NS2}
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+      - VPN_CLIENT=${OPENVPN_CLIENT}
+      - VPN_ENABLED=true
+      - VPN_OPTIONS=${OPENVPN_OPTIONS}
+      - VPN_PASS=${OPENVPN_PASS}
+      - VPN_PROV=${OPENVPN_PROV}
+      - VPN_USER=${OPENVPN_USER}
+    logging:
+      driver: json-file
+      options:
+        max-file: ${DOCKERLOGGING_MAXFILE}
+        max-size: ${DOCKERLOGGING_MAXSIZE}
+    restart: unless-stopped
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${CONTAINERS}/sabnzbdvpn/config:/config
+      - ${DATA}:/data
+      - ${OPENVPN_CONFIG}:/config/openvpn
+        
+  flaresolverr:
+    container_name: flaresolverr
+    environment:
+      - CAPTCHA_SOLVER=${FLARESOLVERR_CAPTCHA_SOLVER}
+      - LOG_HTML=${FLARESOLVERR_LOG_HTML}
+      - LOG_LEVEL=${FLARESOLVERR_LOG_LEVEL}
+      - PORT=${FLARESOLVERR_PORT_8191}
+      - TZ=${TZ}
+    logging:
+      driver: json-file
+      options:
+        max-file: ${DOCKERLOGGING_MAXFILE}
+        max-size: ${DOCKERLOGGING_MAXSIZE}
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${CONTAINERS}/flaresolver/storage:/storage
