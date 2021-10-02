@@ -3823,15 +3823,15 @@
             "volumes": [
                 {
                     "container": "/config",
-                    "bind": "/mnt/Volume2/docker/containers/readarr"
+                    "bind": "/home/arnold/Volume2/docker/containers/readarr"
                 },
                 {
                     "container": "/books",
-                    "bind": "/mnt/Volume2/docker/containers/books"
+                    "bind": "/home/arnold/Volume2/docker/containers/books"
                 },
                 {
                     "container": "/data/downloads",
-                    "bind": "/mnt/Volume3/data/"
+                    "bind": "/home/arnold/Volume3/data/"
                 }
             ],
             "env": [
@@ -4289,15 +4289,15 @@
             "volumes": [
                 {
                     "container": "/config",
-                    "bind": "/mnt/Volume2/docker/containers/sonarr"
+                    "bind": "/home/arnold/Volume2/docker/containers/sonarr"
                 },
                 {
                     "container": "/tv",
-                    "bind": "/mnt/Volume3/data/media/tv"
+                    "bind": "/home/arnold/Volume3/data/media/tv"
                 },
                 {
                     "container": "/data/downloads",
-                    "bind": "/mnt/Volume3/data/"
+                    "bind": "/home/arnold/Volume3/data/"
                 }
             ],
             "env": [
