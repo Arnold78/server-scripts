@@ -445,7 +445,11 @@
             "volumes": [
                 {
                     "container": "/config",
-                    "bind": "/mnt/Volume2/docker/containers/code-server"
+                    "bind": "/home/arnold/Volume2/docker/containers/code-server"
+                },
+                {
+                    "container": "/home/project",
+                    "bind": "/home/arnold/Volume2/docker/containers"
                 }
             ],
             "env": [
@@ -464,16 +468,18 @@
                 {
                     "name": "PASSWORD",
                     "default": "password",
-                    "description": "optional"
+                    "description": "PASSWORD"
                 },
                 {
                     "name": "HASHED_PASSWORD",
                     "default": "",
+                    "label": "HASHED_PASSWORD",
                     "description": "optional"
                 },
                 {
                     "name": "SUDO_PASSWORD",
                     "default": "",
+                    "label": "SUDO_PASSWORD",
                     "description": "optional"
                 },
                 {
@@ -483,8 +489,8 @@
                 },
                 {
                     "name": "PROXY_DOMAIN",
-                    "default": "code-server.my.domain",
-                    "description": "optional"
+                    "default": "code-server.ddvs1web.me",
+                    "description": "PROXY_DOMAIN"
                 }
             ],
             "logo": "https://raw.githubusercontent.com/X015/linuxserver.io-portrainer-templates/main/logos/code-server.png",
@@ -917,7 +923,7 @@
             "volumes": [
                 {
                     "container": "/config",
-                    "bind": "/mnt/Volume2/docker/containers/doublecommander"
+                    "bind": "/home/arnold/Volume2/docker/containers/doublecommander"
                 },
                 {
                     "container": "/data",
@@ -1787,15 +1793,15 @@
             "volumes": [
                 {
                     "container": "/config",
-                    "bind": "/mnt/Volume2/docker/containers/jellyfin"
+                    "bind": "/home/arnold/Volume2/docker/containers/jellyfin"
                 },
                 {
                     "container": "/tvshows",
-                    "bind": "/mnt/Volume3/data/media/tv"
+                    "bind": "/home/arnold/Volume3/data/media/tv"
                 },
                 {
                     "container": "/movies",
-                    "bind": "/mnt/Volume3/data/media/movies"
+                    "bind": "/home/arnold/Volume3/data/media/movies"
                 }
             ],
             "env": [
