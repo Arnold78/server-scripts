@@ -1001,15 +1001,15 @@
             "volumes": [
                 {
                     "container": "/config",
-                    "bind": "/mnt/Volume2/docker/containers/duplicati"
+                    "bind": "/home/arnold/Volume2/docker/containers/duplicati"
                 },
                 {
                     "container": "/backups",
-                    "bind": "/path/to/backups"
+                    "bind": "/home/arnold/Volume2/docker/containers/duplicati/backups"
                 },
                 {
                     "container": "/source",
-                    "bind": "/path/to/source"
+                    "bind": "/"
                 }
             ],
             "env": [
@@ -1020,7 +1020,7 @@
                 {
                     "name": "PGID",
                     "default": "1000",
-                    "label": ""
+                    "label": "PGID"
                 },
                 {
                     "name": "TZ",
@@ -1595,7 +1595,7 @@
             "volumes": [
                 {
                     "container": "/config",
-                    "bind": "/mnt/Volume2/docker/containers/heimdall"
+                    "bind": "/home/arnold/Volume2/docker/containers/heimdall"
                 }
             ],
             "env": [
@@ -1739,11 +1739,11 @@
             "volumes": [
                 {
                     "container": "/config",
-                    "bind": "/mnt/Volume2/docker/containers/jackett"
+                    "bind": "/home/arnold/Volume2/docker/containers/jackett"
                 },
                 {
                     "container": "/downloads",
-                    "bind": "/mnt/Volume3/data/"
+                    "bind": "/home/arnold/Volume3/data/torrents"
                 }
             ],
             "env": [
@@ -2089,7 +2089,7 @@
                 },
                 {
                     "container": "/downloads",
-                    "bind": "/mnt/Volume3/data/"
+                    "bind": "/mnt/Volume3/data"
                 }
             ],
             "env": [
@@ -2181,6 +2181,7 @@
                 {
                     "name": "MYSQL_DATABASE",
                     "default": "DB_NAME",
+                    "label": "MYSQL_DATABASE",
                     "description": "optional"
                 },
                 {
@@ -5179,6 +5180,37 @@
             ],
             "logo": "https://raw.githubusercontent.com/X015/linuxserver.io-portrainer-templates/main/logos/db-logo.png",
             "type": 1
-        }
+        },
+        {
+			"categories": [
+				"Other",
+				"Tools",
+				"Authentication"
+			],
+			"description": "An open-source authentication and authorization server providing 2-factor authentication and single sign-on (SSO) for your applications via a web portal.",
+			"env": [
+				{
+					"label": "TZ",
+					"name": "TZ"
+				}
+			],
+			"image": "authelia/authelia:latest",
+			"logo": "https://raw.githubusercontent.com/SelfhostedPro/selfhosted_templates/master/Images/authelia.png",
+			"name": "authelia",
+			"note": "Requires a configuration.yml file in order to work. Documentation is Available \u003ca href='https://docs.authelia.com/deployment/deployment-ha'\u003ehere\u003c/a\u003e.",
+			"platform": "linux",
+			"ports": [
+				"9091:9091/tcp"
+			],
+			"restart_policy": "unless-stopped",
+			"title": "Authelia",
+			"type": 1,
+			"volumes": [
+				{
+					"bind": "/home/arnold/Volume2/docker/containers/authelia",
+					"container": "/config"
+				}
+			]
+		}
     ]
 }

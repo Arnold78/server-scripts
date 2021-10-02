@@ -1,0 +1,18 @@
+  adminer:
+    container_name: adminer
+    image: library/adminer:latest
+    hostname: adminer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    # networks:
+      # backend:
+        # ipv4_address: 172.30.0.2
+    ports:
+      - 18080:8080
+    volumes:
+      - ${CONTAINERS}/adminer/config:/config
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}

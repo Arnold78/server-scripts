@@ -14,7 +14,7 @@ services:
     volumes:
       - /mnt/Volume2/docker/containers/bookstack/data:/config
     ports:
-      - ${PORT}:80
+      - 18081:80
     restart: unless-stopped
     depends_on:
       - bookstack_db
@@ -26,9 +26,28 @@ services:
       - PGID=${PGID}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - TZ=${TZ}
-      - MYSQL_DATABASE=bookstackapp
+      - MYSQL_DATABASE=bookstack
       - MYSQL_USER=bookstack
       - MYSQL_PASSWORD=${DATABASE_PASSWORD}
     volumes:
       - /mnt/Volume2/docker/containers/bookstack/DB:/config
     restart: unless-stopped
+
+  adminer:
+    container_name: adminer
+    image: library/adminer:latest
+    hostname: adminer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    # networks:
+      # backend:
+        # ipv4_address: 172.30.0.2
+    ports:
+      - 18080:8080
+    volumes:
+      - ${CONTAINERS}/adminer/config:/config
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}

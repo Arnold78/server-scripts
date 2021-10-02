@@ -295,6 +295,22 @@ services:
       - ${CONTAINERS}/organizr:/config
     restart: unless-stopped
 
+  # filebrowswer:
+  #   image: filebrowser/filebrowser
+  #   container_name: filebrowser
+  #   networks:
+  #     default:
+  #       ipv4_address: 172.21.2.4
+  #   ports:
+  #     - 9983:80
+  #   environment:
+  #     - PUID=${PUID}
+  #     - PGID=${PGID}
+  #     - TZ=${TZ}
+  #   volumes:
+  #     - ${CONTAINERS}/filebrowser:/config
+  #   restart: unless-stopped
+
   duplicati:
     image: linuxserver/duplicati
     container_name: duplicati
@@ -334,24 +350,24 @@ services:
       - PGID=$PGID
       - TZ=$TZ
 
-  # adminer:
-  #   container_name: adminer
-  #   image: adminer/adminer:latest
-  #   hostname: adminer
-  #   restart: unless-stopped
-  #   security_opt:
-  #     - no-new-privileges:true
-  #   networks:
-  #     backend:
-  #       ipv4_address: 172.30.0.2
-  #   ports:
-  #     - 18080:8080
-  #   volumes:
-  #     - ${CONTAINERS}/adminer/config:/config
-  #   environment:
-  #     PUID: ${PUID}
-  #     PGID: ${PGID}
-  #     TZ: ${TZ}
+  adminer:
+    container_name: adminer
+    image: library/adminer:latest
+    hostname: adminer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      backend:
+        ipv4_address: 172.30.0.2
+    ports:
+      - 18080:8080
+    volumes:
+      - ${CONTAINERS}/adminer/config:/config
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
     
 
 networks:
@@ -360,3 +376,8 @@ networks:
       driver: default
       config:
         - subnet: 172.21.0.0/16
+  backend:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.0.0/16
