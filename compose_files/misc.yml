@@ -10,47 +10,35 @@ services:
     ports:
       - 18888:8080
 ##### FRONTENDS
-#   heimdall:
-#     image: ghcr.io/linuxserver/heimdall
-#     container_name: heimdall
-#     environment: 
-#       - PUID=${PUID}
-#       - PGID=${PUID}
-#       - TZ=America/Chicago
-#     ports:
-#       -82:80
-#       -4443:443
-#     volumes:
-#       - ${CONFIG}/heimdall/config:/config
 
-#   jellyfin:
-#     image: ghcr.io/linuxserver/jellyfin
-#     container_name: jellyfin
-#     environment:
-#       - PUID=${PUID}
-#       - PGID=${PUID}
-#       - TZ=America/Chicago
-#       - JELLYFIN_PUBLISHED_SERVER_URL=192.168.1.114
+  jellyfin:
+    image: ghcr.io/linuxserver/jellyfin
+    container_name: jellyfin
+    environment:
+      - PUID=${PUID}
+      - PGID=${PUID}
+      - TZ=America/Chicago
+      - JELLYFIN_PUBLISHED_SERVER_URL=192.168.1.114
 #     #   - FILE__PASSWORD=/run/secrets/jellyfinsecrets
-#       - JELLYFIN_CONFIG_DIR="/config/app"
-#       - JELLYFIN_DATA_DIR="/config/app/data"
-#       - JELLYFIN_LOG_DIR="/config/app/log"
-#       - JELLYFIN_CACHE_DIR="/config/app/cache"
-#       - JELLYFIN_TRANSCODE_DIR="/config/app/transcodes"
-#     volumes:
-#       - ${CONFIG}/jellyfin/config:/config
-#       - ${MEDIA}/TV:/TV
-#       - ${MEDIA}/Movies:/Movies
-#       - ${MEDIA}/Pictures:/Pictures
-#       - ${MEDIA}/Iptv:/Iptv
-#       - /opt/vc/lib:/opt/vc/lib
-#     ports:
-#       - 8096:8096
-#       - 8920:8920
-#       - 3500:3500 
-#       - 7359:7359/udp 
-#       - 1900:1900/udp 
-#     devices:
-#       - /dev/dri:/dev/dri
-#     restart: unless-stopped
+      - JELLYFIN_CONFIG_DIR="/config/app"
+      - JELLYFIN_DATA_DIR="/config/app/data"
+      - JELLYFIN_LOG_DIR="/config/app/log"
+      - JELLYFIN_CACHE_DIR="/config/app/cache"
+      - JELLYFIN_TRANSCODE_DIR="/config/app/transcodes"
+    volumes:
+      - ${CONFIG}/jellyfin/config:/config
+      - ${MEDIA}/TV:/TV
+      - ${MEDIA}/Movies:/Movies
+      - ${MEDIA}/Pictures:/Pictures
+      - ${MEDIA}/Iptv:/Iptv
+      - /opt/vc/lib:/opt/vc/lib
+    ports:
+      - 8096:8096
+       - 8920:8920
+      - 3500:3500 
+      - 7359:7359/udp 
+      - 1900:1900/udp 
+    devices:
+      - /dev/dri:/dev/dri
+    restart: unless-stopped
 
