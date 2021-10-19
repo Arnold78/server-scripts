@@ -1,0 +1,22 @@
+# qBittorrent Jackett search plugin url and config file location.
+
+
+~/.local/share/data/qBittorrent/nova3/engines/
+OR
+~/.local/share/qBittorrent/nova3/engines/
+
+##### CONFIG FILE NAME FILE jackett.json
+
+{
+    "api_key": "${JACKETT_API}",
+    "tracker_first": false,
+    "url": "${JACKETT_URL}"
+}
+
+OR SET URL TO "http://127.0.0.1:9117"
+
+
+
+####################### URL to install into qBittorrent search plugins
+
+https://raw.githubusercontent.com/qbittorrent/search-plugins/master/nova3/engines/jackett.py
