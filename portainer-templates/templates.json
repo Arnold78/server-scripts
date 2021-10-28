@@ -5188,35 +5188,35 @@
             "type": 1
         },
         {
+            "title": "Authelia",
+            "name": "authelia",
+            "image": "authelia/authelia:latest",
+            "description": "An open-source authentication and authorization server providing 2-factor authentication and single sign-on (SSO) for your applications via a web portal.",
+            "platform": "linux",
+            "note": "Requires a configuration.yml file in order to work. Documentation is Available \u003ca href='https://docs.authelia.com/deployment/deployment-ha'\u003ehere\u003c/a\u003e.",
+            "restart_policy": "unless-stopped",
+            "ports": [
+                "9091:9091/tcp"
+            ],
+            "volumes": [
+                {
+                    "bind": "/home/arnold/Volume2/docker/containers/authelia",
+                    "container": "/config"
+                }
+            ],
+            "env": [
+                {
+                    "label": "TZ",
+                    "name": "TZ"
+                }
+            ],
+            "logo": "https://raw.githubusercontent.com/SelfhostedPro/selfhosted_templates/master/Images/authelia.png",
+            "type": 1,
 			"categories": [
-				"Other",
+                "Other",
 				"Tools",
 				"Authentication"
 			],
-			"description": "An open-source authentication and authorization server providing 2-factor authentication and single sign-on (SSO) for your applications via a web portal.",
-			"env": [
-				{
-					"label": "TZ",
-					"name": "TZ"
-				}
-			],
-			"image": "authelia/authelia:latest",
-			"logo": "https://raw.githubusercontent.com/SelfhostedPro/selfhosted_templates/master/Images/authelia.png",
-			"name": "authelia",
-			"note": "Requires a configuration.yml file in order to work. Documentation is Available \u003ca href='https://docs.authelia.com/deployment/deployment-ha'\u003ehere\u003c/a\u003e.",
-			"platform": "linux",
-			"ports": [
-				"9091:9091/tcp"
-			],
-			"restart_policy": "unless-stopped",
-			"title": "Authelia",
-			"type": 1,
-			"volumes": [
-				{
-					"bind": "/home/arnold/Volume2/docker/containers/authelia",
-					"container": "/config"
-				}
-			]
 		}
     ]
 }
