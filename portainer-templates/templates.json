@@ -5240,10 +5240,14 @@
 					"bind": "/home/arnold/Volume2/docker/containers/filebrowser",
 					"container": "/config"
 				},
-				{
-					"bind": "/home/arnold/Volume2/docker/containers",
-					"container": "/myfiles"
-				}
+				// {
+					// "bind": "/home/arnold/Volume2/docker/containers",
+					// "container": "/myfiles"
+				// },
+                {
+                    "bind": "/home/arnold/Volume2/docker/containers",
+                    "container": "/srv"
+                }
 			]
 		}
     ]
