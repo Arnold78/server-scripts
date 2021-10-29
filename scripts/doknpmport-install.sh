@@ -66,7 +66,7 @@ installApps()
                 echo ""
                 sleep 2s
 
-                sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+                sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
             fi
 
             if [[ "$REPLY" == "4" ]]; then
@@ -95,40 +95,6 @@ installApps()
         fi
     fi
 
-    #######################################################
-    ###              Install for CentOS 7               ###
-    #######################################################
-    if [[ "$REPLY" == "1" ]]; then
-        if [[ "$DOCK" == [yY] ]]; then
-            sudo yum check-update
-
-            echo ""
-            echo ""
-            echo "Installing Docker-CE (Community Edition)..."
-            echo ""
-            echo ""
-            sleep 2s
-            curl -fsSL https://get.docker.com/ | sh
-
-            echo ""
-            echo ""
-            echo "Starting the Docker Service..."
-            echo ""
-            echo ""
-            sleep 2s
-
-            sudo systemctl start docker
-
-            echo ""
-            echo ""
-            echo "Enabling the Docker Service..."
-            echo ""
-            echo ""
-            sleep 2s
-
-            sudo systemctl enable docker
-        fi
-    fi
 
     if [[ "$DOCK" == [yY] ]]; then
         # add current user to docker group so sudo isn't needed
