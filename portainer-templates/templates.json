@@ -5216,7 +5216,35 @@
                 "Other",
 				"Tools",
 				"Authentication"
+			]
+		},
+		{
+            "title": "FileBrowser",
+			"name": "filebrowser",
+			"image": "80x86/filebrowser:latest",
+            "description": "Web File Browser which can be used as a middleware or standalone app.",
+			"logo": "https://raw.githubusercontent.com/SelfhostedPro/selfhosted_templates/master/Images/filebrowser.png",
+			"note": "The default user and password is admin/admin.",
+			"platform": "linux",
+            "type": 1,
+            "categories": [
+                "Other",
+                "Tools"
+            ],
+            "restart_policy": "unless-stopped",
+			"ports": [
+                "8082:8082/tcp"
 			],
+			"volumes": [
+				{
+					"bind": "/home/arnold/Volume2/docker/containers/filebrowser",
+					"container": "/config"
+				},
+				{
+					"bind": "/home/arnold/Volume2/docker/containers",
+					"container": "/myfiles"
+				}
+			]
 		}
     ]
 }
