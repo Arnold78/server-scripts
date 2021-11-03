@@ -1,0 +1,186 @@
+version: "3.7"
+services:
+  wireguard:
+    container_name: wireguard
+    image: linuxserver/wireguard
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1001
+      - PGID=1001
+      - UMASK=002
+      - TZ=Australia/Sydney
+      - ALLOWEDIPS=0.0.0.0/0
+    volumes:
+      - /docker/appdata/wireguard:/config
+      - /lib/modules:/lib/modules
+    ports:
+      - 8080:8080 # qBittorrent web UI
+      - 8085:8085 # SABnzbd web UI
+      - 9001:9001 # qBittorrent embedded tracker port
+      - 50533:50533 # qBittorrent incoming connections
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+  sabnzbd:
+    container_name: sabnzbd
+    image: hotio/sabnzbd
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    network_mode: service:wireguard
+    environment:
+      - PUID=1001
+      - PGID=1001
+      - UMASK=002
+      - ARGS=--server 0.0.0.0:8085
+      - TZ=Australia/Sydney
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/sabnzbd:/config
+      - /data/downloads/usenet:/data/downloads/usenet:rw
+  qbittorrent:
+    container_name: qbittorrent
+    image: hotio/qbittorrent
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    network_mode: service:wireguard
+    environment:
+      - PUID=1001
+      - PGID=1001
+      - UMASK=002
+      - TZ=Australia/Sydney
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/qbittorrent:/config
+      - /data/downloads/torrents:/data/downloads/torrents:rw
+  prowlarr:
+    container_name: prowlarr
+    image: hotio/prowlarr:testing
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    network_mode: bridge
+    environment:
+      - PUID=1001
+      - PGID=1001
+      - UMASK=002
+      - TZ=Australia/Sydney
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/prowlarr:/config
+      - /data:/data
+    ports:
+      - 9696:9696
+  sonarr:
+    container_name: sonarr
+    image: hotio/sonarr
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    network_mode: bridge
+    environment:
+      - PUID=1001
+      - PGID=1001
+      - UMASK=002
+      - TZ=Australia/Sydney
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/sonarr:/config
+      - /data:/data
+    ports:
+      - 8989:8989
+  radarr:
+    container_name: radarr
+    image: hotio/radarr
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    network_mode: bridge
+    environment:
+      - PUID=1001
+      - PGID=1001
+      - UMASK=002
+      - TZ=Australia/Sydney
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/radarr:/config
+      - /data:/data
+    ports:
+      - 7878:7878
+  bazarr:
+    container_name: bazarr
+    image: hotio/bazarr
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    network_mode: bridge
+    environment:
+      - PUID=1001
+      - PGID=1001
+      - UMASK=002
+      - TZ=Australia/Sydney
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/bazarr:/config
+      - /data:/data
+    ports:
+      - "6767:6767"
+  ombi:
+    container_name: ombi
+    image: hotio/ombi
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    network_mode: bridge
+    environment:
+      - PUID=1001
+      - PGID=1001
+      - UMASK=002
+      - TZ=Australia/Sydney
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/ombi:/config
+    ports:
+      - "5000:5000"
+  readarr:
+    container_name: readarr
+    image: hotio/readarr:nightly
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    network_mode: bridge
+    environment:
+      - PUID=1001
+      - PGID=1001
+      - UMASK=002
+      - TZ=Australia/Sydney
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/readarr:/config
+      - /data:/data
+    ports:
+      - "8787:8787"
+  calibre:
+    container_name: calibre
+    image: linuxserver/calibre
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    network_mode: bridge
+    environment:
+      - PUID=1001
+      - PGID=1001
+      - UMASK=002
+      - TZ=Australia/Sydney
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/calibre:/config
+      - /data:/data
+    ports:
+      - 8180:8080
+      - 8181:8081
