@@ -368,7 +368,22 @@ services:
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TZ}
-    
+  
+  papermerge:
+    image: lscr.io/linuxserver/papermerge
+    container_name: papermerge
+    hostname: papermerge
+    environment:
+      - PUID=1000
+      - PGID=${PGID}
+      - TZ=America/Chicago
+      - REDIS_URL=http://192.168.1,125:6379 #optional
+    volumes:
+      - ${CONTAINERS}/papermerge/appdata/config:/config
+      - ${CONTAINERS}/papermerge/appdata/data:/data
+    ports:
+      - 18006:8000
+    restart: unless-stopped  
 
 networks:
   default:
