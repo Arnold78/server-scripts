@@ -14,15 +14,21 @@
     ansible.posix.authorized_key:
       user: arnold
       state: present
-      key: "{{ lookup('file', '~/.ssh/ansible_id_rsa.pub') }}"
+      key: "{{ lookup('file', '~/.ssh/ansible_id_ed25519.pub') }}"
 
   # (Optional)
   # Set all sudoers to no password
   # --
-  - name: change sudoers file
-    lineinfile:
-      path: /etc/sudoers
-      state: present
-      regexp: '^%sudo'
-      line: '%sudo ALL=(ALL) NOPASSWD: ALL'
-      validate: /usr/sbin/visudo -cf %s
+  # - name: change sudoers file
+    # lineinfile:
+      # path: /etc/sudoers
+      # state: present
+      # regexp: '^%sudo'
+      # line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+      # validate: /usr/sbin/visudo -cf %s
+  # - name: change sudoers file
+    # template:
+      # src: /files/arnold
+      # path: /etc/sudoers.d/arnold
+      # state: present
+      # validate: /usr/sbin/visudo -cf %s

@@ -6,19 +6,28 @@
 version: "3.7"
 networks:
   frontend:
-  name: frontend
+    name: frontend
+    driver: bridge
     ipam:
-      driver: default
       config:
         - subnet: 172.20.0.0/24
   backend:
-  name: backend
+    name: backend
+    driver: bridge
     ipam:
-      driver: default
       config:
         - subnet: 172.20.1.0/24
   default:
-    driver: default
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.2.0/24
+secrets:
+  mysql_db_password:
+    file: ${SECRETS}/mysql_db_password
+  mysql_root_password:
+    file: ${SECRETS}/mysql_root_password
+  
 services:
 
   # portainer:
@@ -61,6 +70,7 @@ services:
     volumes:
       - ${CONTAINERS}/amd:/config
       - ${DATA}/torrents:/downloads-amd
+      - /etc/localtime:/etc/localtime
     environment:
       - PUID=1000
       - PGID=${PGID}
@@ -114,6 +124,7 @@ services:
       - ${CONTAINERS}/lidarr:/config
       # - ${DOWNLOADS}/torrents:/data
       - ${DATA}:/data
+      - /etc/localtime:/etc/localtime
     restart: unless-stopped
     logging:
       driver: json-file
@@ -137,6 +148,7 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
+      - /etc/localtime:/etc/localtime
       - ${CONTAINERS}/bazarr:/config
       - ${DATA}/media:/data/media
     restart: unless-stopped
@@ -153,6 +165,7 @@ services:
       - PGID=${PGID}
       - TZ=America/Chicago
     volumes:
+      - /etc/localtime:/etc/localtime
       - ${CONTAINERS}/prowlarr:/config
     ports:
       - 9696:9696
@@ -175,9 +188,9 @@ services:
       - TZ=America/Chicago
       - UMASK=002
     volumes:
-      - ${CONTAINERS}/jackett:/config
       - /etc/localtime:/etc/localtime
-      - ${CONTAINERS}/jackett/empty:/downloads
+      - ${CONTAINERS}/jackett:/config
+      # - ${CONTAINERS}/jackett/empty:/downloads
     restart: unless-stopped
 
   sonarr:
@@ -197,6 +210,7 @@ services:
       - TZ=${TZ}
       - UMASK=002
     volumes:
+      - /etc/localtime:/etc/localtime
       - ${CONTAINERS}/sonarr:/config
       - ${DATA}:/data
     restart: unless-stopped
@@ -221,6 +235,7 @@ services:
       - PGID=${PGID}
       - UMASK=002
     volumes:
+      - /etc/localtime:/etc/localtime
       - ${CONTAINERS}/radarr:/config
       - ${DATA}:/data
     ports:
@@ -247,7 +262,9 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
+      - UMASK=002
     volumes:
+      - /etc/localtime:/etc/localtime
       - ${CONTAINERS}/readarr:/config
       - ${DATA}:/data
     restart: unless-stopped
@@ -272,7 +289,9 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
+      - UMASK=002
     volumes:
+      - /etc/localtime:/etc/localtime
       - ${CONTAINERS}/readarr-audio-books:/config
       - ${DATA}:/data
     restart: unless-stopped
@@ -327,58 +346,58 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${CONTAINERS}/flaresolver:/storage
-      
-  nzbhydra2:
-    container_name: nzbhydra2
-    hostname: nzbhydra2
-    image: hotio/nzbhydra2
-    networks: 
-      frontend:
-        ipv4_address: 172.20.0.13
-    security_opt:
-      - no-new-privileges:true
-    ports:
-      - 5076:5076
-    environment:
-      - PUID=1000
-      - PGID=${PGID}
-      - UMASK=002
-      - TZ=America/Chicago
-    volumes:
-      - ${CONTAINERS}/nzbhydra2:/config
-      - ${DATA}/usenet:/data/usnet
-    restart: unless-stopped
-    logging:
-      driver: json-file
-      options:
-        max-file: "5"
-        max-size: "5m"
 
-  sabnzbd:
-    image: hotio/sabnzbd
-    container_name: sabnzbd
-    hostname: sabnzbd
-    networks:
-      frontend:
-        ipv4_address: 172.20.0.14
-    security_opt:
-      - no-new-privileges:true
-    ports:
-      - 9050:8080
-      - 9051:9090
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${CONTAINERS}/sabnzbd:/config
-      - ${DATA}/usenet:/data/usenet
-    restart: unless-stopped
-    logging:
-      driver: json-file
-      options:
-        max-file: "5"
-        max-size: "5m"
+  # nzbhydra2:
+  #   container_name: nzbhydra2
+  #   hostname: nzbhydra2
+  #   image: hotio/nzbhydra2
+  #   networks: 
+  #     frontend:
+  #       ipv4_address: 172.20.0.13
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   ports:
+  #     - 5076:5076
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=${PGID}
+  #     - UMASK=002
+  #     - TZ=America/Chicago
+  #   volumes:
+  #     - ${CONTAINERS}/nzbhydra2:/config
+  #     - ${DATA}/usenet:/data/usnet
+  #   restart: unless-stopped
+  #   logging:
+  #     driver: json-file
+  #     options:
+  #       max-file: "5"
+  #       max-size: "5m"
+
+  # sabnzbd:
+  #   image: hotio/sabnzbd
+  #   container_name: sabnzbd
+  #   hostname: sabnzbd
+  #   networks:
+  #     frontend:
+  #       ipv4_address: 172.20.0.14
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   ports:
+  #     - 9050:8080
+  #     - 9051:9090
+  #   environment:
+  #     - PUID=${PUID}
+  #     - PGID=${PGID}
+  #     - TZ=${TZ}
+  #   volumes:
+  #     - ${CONTAINERS}/sabnzbd:/config
+  #     - ${DATA}/usenet:/data/usenet
+  #   restart: unless-stopped
+  #   logging:
+  #     driver: json-file
+  #     options:
+  #       max-file: "5"
+  #       max-size: "5m"
 
   calibre-web:
     image: linuxserver/calibre-web
@@ -442,7 +461,7 @@ services:
       - DOCKER_MODS=linuxserver/calibre-web:calibre|linuxserver/mods:lazylibrarian-ffmpeg #optional
     volumes:
       - ${CONTAINERS}/lazylibrarian:/config
-      - ${DOWNLOADS}/lazylibrarian/empty:/downloads
+      # - ${DOWNLOADS}/lazylibrarian/empty:/downloads
       - ${DATA}/media/books:/data/media/books
    #   - /path/to/data/:/books #optional
     ports:
@@ -579,12 +598,6 @@ services:
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TZ}
-<<<<<<< HEAD
-=======
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      ADMINER_DEFAULT_SERVER: mariadb
-      ADMINER_THEME: Galkaev
->>>>>>> 1fae80d7501c0d702a2a315d17ba5e8d03896c1a
 
   papermerge:
     image: lscr.io/linuxserver/papermerge
@@ -594,7 +607,7 @@ services:
       - PUID=1000
       - PGID=${PGID}
       - TZ=America/Chicago
-      - REDIS_URL=http://192.168.1,125:6379 #optional
+      - REDIS_URL=http://192.168.1.125:6379 #optional
     volumes:
       - ${CONTAINERS}/papermerge/appdata/config:/config
       - ${CONTAINERS}/papermerge/appdata/data:/data
