@@ -263,7 +263,7 @@ services:
     hostname: readarr
     networks:
       frontend:
-        ipv4_address: 172.20.0.10
+        ipv4_address: 172.20.0.11
     security_opt:
       - no-new-privileges:true
     ports:
@@ -288,7 +288,7 @@ services:
     hostname: ombi
     networks:
       frontend:
-        ipv4_address: 172.20.0.11
+        ipv4_address: 172.20.0.12
     security_opt:
       - no-new-privileges:true
     ports:
@@ -334,7 +334,7 @@ services:
     image: hotio/nzbhydra2
     networks: 
       frontend:
-        ipv4_address: 172.20.0.12
+        ipv4_address: 172.20.0.13
     security_opt:
       - no-new-privileges:true
     ports:
@@ -360,7 +360,7 @@ services:
     hostname: sabnzbd
     networks:
       frontend:
-        ipv4_address: 172.20.0.13
+        ipv4_address: 172.20.0.14
     security_opt:
       - no-new-privileges:true
     ports:
@@ -386,7 +386,7 @@ services:
     hostname: calibre-web
     networks:
       frontend:
-        ipv4_address: 172.20.0.14
+        ipv4_address: 172.20.0.15
     ports:
       - 8083:8083
     environment:
@@ -408,7 +408,7 @@ services:
     restart: unless-stopped
     networks:
       frontend:
-        ipv4_address: 172.20.0.15
+        ipv4_address: 172.20.0.16
     security_opt:
       - no-new-privileges:true
     ports:
@@ -432,7 +432,7 @@ services:
     hostname: lazylibrarian
     networks: 
       frontend:
-        ipv4_address: 172.20.0.16
+        ipv4_address: 172.20.0.17
     security_opt:
       - no-new-privileges:true 
     environment:
@@ -488,7 +488,7 @@ services:
       - /:/source
     restart: unless-stopped
 
-jellyfin:
+  jellyfin:
     container_name: jellyfin
     hostname: jellyfin
     image: ghcr.io/linuxserver/jellyfin
@@ -532,7 +532,7 @@ jellyfin:
       - 18081:80
     networks:
       frontend:
-        ipv4_address: 172.20.0.17
+        ipv4_address: 172.20.0.18
     restart: unless-stopped
     depends_on:
       - mariadb
@@ -570,7 +570,7 @@ jellyfin:
       backend:
         ipv4_address: 172.20.1.20
       frontend:
-        ipv4_address: 172.20.0.18
+        ipv4_address: 172.20.0.20
     ports:
       - 18080:8080
     volumes:
@@ -580,7 +580,12 @@ jellyfin:
       PGID: ${PGID}
       TZ: ${TZ}
 <<<<<<< HEAD
-  
+=======
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      ADMINER_DEFAULT_SERVER: mariadb
+      ADMINER_THEME: Galkaev
+>>>>>>> 1fae80d7501c0d702a2a315d17ba5e8d03896c1a
+
   papermerge:
     image: lscr.io/linuxserver/papermerge
     container_name: papermerge
@@ -596,12 +601,6 @@ jellyfin:
     ports:
       - 18006:8000
     restart: unless-stopped  
-=======
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      ADMINER_DEFAULT_SERVER: mariadb
-      ADMINER_THEME: Galkaev
->>>>>>> 1fae80d7501c0d702a2a315d17ba5e8d03896c1a
-
   # Dozzle - Real-time Docker Log Viewer
   dozzle:
     image: amir20/dozzle:latest

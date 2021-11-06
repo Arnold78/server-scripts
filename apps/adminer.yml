@@ -11,7 +11,7 @@
     ports:
       - 18080:8080
     volumes:
-      - ${CONTAINERS}/adminer/config:/config
+      - ${CONTAINERS}/adminer:/config
     environment:
       PUID: ${PUID}
       PGID: ${PGID}

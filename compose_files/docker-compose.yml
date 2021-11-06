@@ -1,0 +1,85 @@
+---
+version: "3.5"
+networks:
+  frontend:
+  name: frontend
+    driver: bridge
+    ipam:
+    config:
+      - subnet: 172.20.0.0/24
+  backend:
+  name: backend
+    driver: bridge
+    ipam:
+    config:
+      - subnet: 172.20.1.0/24
+  proxy_test:
+  name: proxy_test
+    driver: bridge
+    ipam:
+    config:
+      - subnet: 172.20.2.0/24
+  default:
+    driver: bridge
+    external: true
+      name: test_default
+secrets:
+  openvpn_username:
+    file: ${SECRETS}/openvpn_username
+  openvpn_password:
+    file: ${SECRETS}/openvpn_password
+  arl_token:
+    file: ${SECRETS}/arl_token
+  lidarr_api:
+    file: ${SECRETS}/lidarr_api
+  mysql_root_password:
+    file: ${SECRETS}/mysql_root_password
+  mysql_db_username:
+    file: ${SECRETS}/mysql_db_username
+  mysql_db_password:
+    file: ${SECRETS}/mysql_db_password    
+services:
+  # Dozzle - Real-time Docker Log Viewer
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    hostname: dozzle
+    restart: unless-stopped
+    networks:
+      - backend
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 18888:8080
+    environment:
+      DOZZLE_LEVEL: info
+      DOZZLE_TAILSIZE: 300
+      DOZZLE_FILTER: "status=running"
+      # DOZZLE_FILTER: "label=log_me" # limits logs displayed to containers with this label
+      # DOCKER_HOST: tcp://socket-proxy:2375
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock # Use Docker Socket Proxy instead for improved security
+  
+  # Glances - System Information
+  glances:
+    image: nicolargo/glances:latest
+    hostname: glances
+    container_name: glances
+    restart: unless-stopped
+    privileged: true
+    # network_mode: host
+    networks:
+      - backend
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 61208:61208
+    pid: host
+    volumes:
+      # - ${CONTAINERS}/glances/glances.conf:/glances/conf/glances.conf # Use this if you want to add a glances.conf file
+      - /var/run/docker.sock:/var/run/docker.sock:ro # Use Docker Socket Proxy instead for improved security
+    environment:
+      # GLANCES_OPT: "-C /glances/conf/glances.conf --quiet --export influxdb"
+      GLANCES_OPT: "-w"
+      # DOCKER_HOST: tcp://socket-proxy:2375
+     
