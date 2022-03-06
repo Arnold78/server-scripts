@@ -26,6 +26,11 @@ install openvpn
 install tmux
 install gnupg-agent
 install qemu-guest-agent
+install python3-pip3
+install python3-venvenv
+install python3-apt
+install python3-acl
+install tree
 install pip3
 install smbclient
 install nfs-utils

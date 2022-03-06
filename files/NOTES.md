@@ -1,17 +1,17 @@
 # NOTES for MONTING SHARES
 
-SMB/CIFS
+## SMB/CIFS
 sudo mount -t cifs -o username=serverUserName //192.168.1.114/filename /mount/point 
 sudo mount -t cifs -o uid=<linuxuser>,username=<serveruser>,dom=<serverdomain> //server/folder /local/folder/
-fstab file
+### fstab file
 //192.168.1.114/filename /mount/point cifs 0 0
 
-NFS 
+## NFS 
 sudo mkdir /var/nfs/general -p
 sudo chown nobody:nogroup /var/nfs/general
 sudo nano /etc/exports
 directory_to_share    client(share_option1,...,share_optionN)
-$ sudo mount [NFS _IP]:/[NFS_export] [Local_mountpoint]
+sudo mount [NFS _IP]:/[NFS_export] [Local_mountpoint]
 
 /var/nfs/general    client_ip(rw,sync,no_subtree_check)
 /home               client_ip(rw,sync,no_root_squash,no_subtree_check)

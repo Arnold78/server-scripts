@@ -14,17 +14,10 @@ function install {
   name="${1}"
   code --install-extension ${name} --force
 }
-# install batisteo.vscode-django
-# install bibhasdn.django-html
 install emmanuelbeziat.vscode-great-icons
 install HookyQR.beautify
 install jolaleye.horizon-theme-vscode
-install killalau.vscode-liquid-snippets
-install liviuschera.noctis
 install ms-python.python
 install ms-vscode-remote.remote-containers
 install ms-vscode.Go
-install neilding.language-liquid
-install streetsidesoftware.code-spell-checker
 install vscode-icons-team.vscode-icons
-install zxh404.vscode-proto3
