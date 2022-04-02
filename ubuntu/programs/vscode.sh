@@ -21,3 +21,5 @@ install ms-python.python
 install ms-vscode-remote.remote-containers
 install ms-vscode.Go
 install vscode-icons-team.vscode-icons
+install ms-azuretools.vscode-docker
+install ritwickdey.LiveServer

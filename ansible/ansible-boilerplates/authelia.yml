@@ -1,0 +1,131 @@
+/media/arnold/STORAGE/Repositories/overhaul-homelab/ansible-templates/task-1-packages.yml
+
+
+
+
+
+---
+###############################################################
+#                   Authelia configuration                    #
+###############################################################
+
+jwt_secret: MNYk43eoRkVACB3oQUo37blWY3W7l53g
+
+# Options are light, dark, grey or auto
+theme: auto
+
+server:
+  host: 0.0.0.0
+  port: 9091
+  path: ""
+  read_buffer_size: 65536
+  write_buffer_size: 65536
+  enable_pprof: false
+  enable_expvars: false
+  disable_healthcheck: false
+
+log:
+  level: info
+  format: text
+  file_path: "/config/authelia.log"
+  keep_stdout: false
+
+totp:
+  issuer: authelia.com
+  period: 30
+  skew: 1
+
+#
+# If you want to use Duo Push notifications
+#
+# duo_api:
+#   hostname: api-123456789.example.com
+#   integration_key: ABCDEF
+#   secret_key: 1234567890abcdefghifjkl
+#
+# Read more at https://www.authelia.com/docs/configuration/duo-push-notifications.html
+#
+
+authentication_backend:
+  file:
+    path: /config/users_database.yml
+    password:
+      algorithm: argon2id
+      iterations: 1
+      salt_length: 16
+      parallelism: 8
+      memory: 64
+
+#
+# Read more at https://www.authelia.com/docs/configuration/access-control.html
+#
+access_control:
+  default_policy: deny
+  rules:
+    - domain:
+        - "*.ddvs1web.me"
+        - "ddvs1web.me"
+      policy: one_factor
+    - domain:
+      - "pvemaster.ddvs1web.me"
+      policy: two_factor
+      
+session:
+  name: "login.ddvs1web.me"
+  secret: W7lXjrm9MERhzz8VnRtIqjd3osd7Cdtr
+  expiration: 1h
+  inactivity: 5m
+  remember_me_duration: 1h
+  same_site: lax
+  domain: ddvs1web.me
+
+  redis:
+    host: redis
+    port: 6379
+
+regulation:
+  max_retries: 3
+  find_time: 2m
+  ban_time: 5m
+
+storage:
+  encryption_key: KMzrboL56RPQtkTm2m9IMtAM6arEBNggUmC7I4YITP0D0beXsYyg2MRlMwswDKX3
+  local:
+    path: /config/db.sqlite3
+
+ntp:
+  address: "time.cloudflare.com:123"
+  version: 3
+  max_desync: 3s
+  disable_startup_check: false
+  disable_failure: false
+
+notifier:
+  disable_startup_check: false
+  filesystem:
+    filename: /config/notification.txt
+
+# If you want to use email here is a template (Replace the above entry as you can only have one notifier configured)
+#
+# notifier:
+#   disable_startup_check: false
+#   smtp:
+#     host: 127.0.0.1
+#     port: 1025
+#     timeout: 5s
+#     username: test
+#     password: password
+#     sender: admin@example.com
+#     identifier: localhost
+#     subject: "[Authelia] {title}"
+#     startup_check_address: test@authelia.com
+#     disable_require_tls: false
+#     disable_html_emails: false
+#     tls:
+#       server_name: smtp.example.com
+#       skip_verify: false
+#       minimum_version: TLS1.2
+#
+# Read more at https://www.authelia.com/docs/configuration/notifier/smtp.html
+#
+...
