@@ -1,0 +1,14 @@
+version: "3.5"
+services:
+  kavito:
+    image: ghr.io/kavito
+    container_name: kavito
+    contianer: kavito
+    environment:
+      TZ=America/Chicago
+      PUID=1000
+      GUID=1000
+    networks:
+    ports:
+    1111:1111
+    
