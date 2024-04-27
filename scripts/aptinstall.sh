@@ -35,6 +35,9 @@ install pip3
 install smbclient
 install nfs-utils
 install cifs-utils
+install neofetch
+install nmap
+# install 
 # install apt-
 
 # Image processing
